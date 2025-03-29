@@ -80,32 +80,38 @@ export function Sidebar({ crawlHistory, selectedId, onItemClick }: SidebarProps)
                             <ScrollArea className="h-[calc(100vh-10rem)]">
                                 {Object.keys(groupedHistory).length > 0 ? (
                                     <div className="space-y-6">
-                                        {Object.entries(groupedHistory).map(([ date, items ]) => (
-                                            <div key={date} className="space-y-2">
-                                                <h4 className="text-xs font-medium text-muted-foreground">
-                                                    {format(new Date(), 'yyyy-MM-dd HH:mm:ss')}
-                                                </h4>
-                                                <div className="space-y-1">
-                                                    {items.map((item) => (
-                                                        <Button
-                                                            key={item.id}
-                                                            variant="ghost"
-                                                            className={cn(
-                                                                'w-full justify-start text-left text-sm',
-                                                                selectedId === item.id && 'bg-accent',
-                                                            )}
-                                                            onClick={() => {
-                                                                onItemClick(item.id);
-                                                                setIsMobileOpen(false);
-                                                            }}
-                                                        >
-                                                            <Globe className="mr-2 h-4 w-4" />
-                                                            <span className="truncate">{new URL(item.url).hostname}</span>
-                                                        </Button>
-                                                    ))}
+                                        {Object.entries(groupedHistory).map(([ date, items ]) => {
+                                            const [stringDay, stringMonth, stringYear] = date.split('/');
+                                            const [ d, m, y ] = [ parseInt(stringDay), parseInt(stringMonth), parseInt(stringYear) ];
+                                            const formattedDate =  format(new Date(y, m, d), 'yyyy-MM-dd')
+
+                                            return (
+                                                <div key={date} className="space-y-2">
+                                                    <h4 className="text-xs font-medium text-muted-foreground">
+                                                        {formattedDate}
+                                                    </h4>
+                                                    <div className="space-y-1">
+                                                        {items.map((item) => (
+                                                            <Button
+                                                                key={item.id}
+                                                                variant="ghost"
+                                                                className={cn(
+                                                                    'w-full justify-start text-left text-sm',
+                                                                    selectedId === item.id && 'bg-accent',
+                                                                )}
+                                                                onClick={() => {
+                                                                    onItemClick(item.id);
+                                                                    setIsMobileOpen(false);
+                                                                }}
+                                                            >
+                                                                <Globe className="mr-2 h-4 w-4" />
+                                                                <span className="truncate">{new URL(item.url).hostname}</span>
+                                                            </Button>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 ) : (
                                     <div className="py-4 text-center text-sm text-muted-foreground">No crawl history yet</div>
